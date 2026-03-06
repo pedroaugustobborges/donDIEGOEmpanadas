@@ -1,524 +1,1064 @@
 <!DOCTYPE html>
-<html lang="pt-es">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulário de Desconto · Don Diego</title>
-    <!-- Google Fonts + simple confetti library -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Promo de Bebidas - Formulário Especial</title>
+  <style>
+    :root {
+      --bg: #f6efe6;
+      --card: rgba(255, 252, 247, 0.88);
+      --card-strong: rgba(255, 250, 243, 0.96);
+      --text: #3b2a21;
+      --muted: #7a6659;
+      --accent: #b36a3c;
+      --accent-2: #d9985f;
+      --success: #2f8f5b;
+      --success-soft: #dff6ea;
+      --border: rgba(95, 61, 43, 0.12);
+      --shadow: 0 20px 60px rgba(72, 49, 35, 0.15);
+      --radius: 24px;
+    }
 
-        body {
-            background: linear-gradient(145deg, #f7f3e9 0%, #f0e9db 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Inter', sans-serif;
-            padding: 1rem;
-            margin: 0;
-        }
+    * { box-sizing: border-box; }
 
-        .discount-card {
-            max-width: 700px;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-radius: 2.5rem;
-            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.2), 0 2px 8px rgba(0,0,0,0.03);
-            padding: 2rem 2rem 2.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            transition: all 0.2s ease;
-        }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(255,255,255,0.55), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(217,152,95,0.14), transparent 32%),
+        linear-gradient(135deg, #f8f2ea 0%, #f3e6d7 45%, #ead9c5 100%);
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      overflow-x: hidden;
+    }
 
-        h1 {
-            font-size: 1.9rem;
-            font-weight: 600;
-            letter-spacing: -0.02em;
-            color: #2e241f;
-            margin-bottom: 0.4rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
+    .shell {
+      width: min(920px, 100%);
+      position: relative;
+    }
 
-        h1 span {
-            background: #d9c5b3;
-            padding: 0.2rem 1rem;
-            border-radius: 40px;
-            font-size: 1rem;
-            font-weight: 500;
-            color: #3b2e26;
-        }
+    .card {
+      position: relative;
+      overflow: hidden;
+      background: var(--card);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+      border-radius: 32px;
+      box-shadow: var(--shadow);
+      min-height: 640px;
+    }
 
-        .subhead {
-            font-size: 1rem;
-            color: #6b5a4e;
-            border-left: 4px solid #c4a484;
-            padding-left: 1rem;
-            margin-bottom: 2rem;
-            font-weight: 400;
-        }
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 28px 0 28px;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
 
-        .question-container {
-            transition: opacity 0.25s ease;
-        }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
 
-        .step-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: #2e241f;
-            margin-bottom: 1.5rem;
-            line-height: 1.3;
-        }
+    .brand-badge {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      display: grid;
+      place-items: center;
+      color: white;
+      font-size: 20px;
+      box-shadow: 0 10px 25px rgba(179, 106, 60, 0.35);
+    }
 
-        .options-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.8rem;
-            margin: 1.2rem 0 1rem;
-        }
+    .brand h1 {
+      margin: 0;
+      font-size: 1.1rem;
+      letter-spacing: 0.02em;
+    }
 
-        .letter-grid {
-            display: grid;
-            grid-template-columns: repeat(9, 1fr);
-            gap: 0.6rem;
-            margin: 1.2rem 0 1rem;
-        }
+    .brand p {
+      margin: 2px 0 0 0;
+      font-size: 0.92rem;
+      color: var(--muted);
+    }
 
-        .option-btn {
-            background: white;
-            border: 1.5px solid #e2d4c8;
-            padding: 0.9rem 1.2rem;
-            border-radius: 40px;
-            font-size: 1rem;
-            font-weight: 500;
-            color: #3b2e26;
-            cursor: pointer;
-            transition: all 0.15s ease;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.02);
-            flex: 1 0 auto;
-            min-width: 100px;
-        }
+    .discount-pill {
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: rgba(179, 106, 60, 0.12);
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 0.9rem;
+      border: 1px solid rgba(179, 106, 60, 0.16);
+    }
 
-        .letter-grid .option-btn {
-            min-width: 0;
-            padding: 0.9rem 0;
-            font-weight: 600;
-            font-size: 1.2rem;
-            background: #faf7f2;
-        }
+    .content {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 0;
+    }
 
-        .option-btn:hover:not(:disabled) {
-            background: #f3ede7;
-            border-color: #b2967d;
-            transform: scale(1.02);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.05);
-        }
+    .left {
+      padding: 28px;
+    }
 
-        .option-btn.correct-highlight {
-            background: #b7d7b0 !important;
-            border-color: #2f6b2f !important;
-            color: #1e421e;
-            box-shadow: 0 0 0 4px rgba(70, 130, 70, 0.15);
-        }
+    .right {
+      position: relative;
+      min-height: 560px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.22), rgba(255,255,255,0.06)),
+        linear-gradient(160deg, rgba(217,152,95,0.24), rgba(179,106,60,0.08));
+      border-left: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
 
-        .wrong-feedback {
-            background: #fbeae9;
-            border-radius: 60px;
-            padding: 0.8rem 1.5rem;
-            margin: 1rem 0 0.5rem;
-            color: #ac4e4e;
-            font-weight: 500;
-            font-size: 0.95rem;
-            display: inline-block;
-            border: 1px solid #f3cdcd;
-        }
+    .panel {
+      width: 100%;
+      max-width: 520px;
+      animation: fadeUp 0.45s ease;
+    }
 
-        .message-banner {
-            background: #e7d9cc;
-            border-radius: 2rem;
-            padding: 1.5rem;
-            text-align: center;
-            font-size: 1.3rem;
-            font-weight: 500;
-            color: #2b3a2b;
-            margin: 1.5rem 0;
-            border: 2px dashed #b69b82;
-        }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.75);
+      border: 1px solid rgba(95, 61, 43, 0.08);
+      color: var(--muted);
+      font-size: 0.86rem;
+      margin-bottom: 14px;
+    }
 
-        .continue-btn {
-            background: #2e241f;
-            color: white;
-            border: none;
-            padding: 1rem 2.5rem;
-            border-radius: 50px;
-            font-size: 1.2rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.15s;
-            box-shadow: 0 8px 14px rgba(0,0,0,0.1);
-            margin-top: 1rem;
-            width: fit-content;
-        }
+    .step-title {
+      margin: 0;
+      font-size: clamp(1.7rem, 2vw, 2.4rem);
+      line-height: 1.12;
+      letter-spacing: -0.03em;
+    }
 
-        .continue-btn:hover {
-            background: #4f3f36;
-            transform: scale(1.02);
-        }
+    .step-desc {
+      margin: 12px 0 0 0;
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.7;
+    }
 
-        .mountains-decoration {
-            display: flex;
-            justify-content: center;
-            gap: 0.5rem;
-            margin: 1.8rem 0 1.2rem;
-            font-size: 3rem;
-            filter: drop-shadow(0 8px 6px #bba48b);
-        }
+    .options-grid,
+    .alpha-grid {
+      display: grid;
+      gap: 12px;
+      margin-top: 24px;
+    }
 
-        .final-reveal {
-            text-align: center;
-            background: linear-gradient(135deg, #fff4e6, #ffe2cc);
-            padding: 2rem;
-            border-radius: 2.5rem;
-            border: 3px solid #d6b17e;
-        }
+    .options-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 
-        .final-reveal h2 {
-            font-size: 2.2rem;
-            font-weight: 700;
-            color: #3d2b1a;
-            margin-bottom: 1.5rem;
-        }
+    .alpha-grid {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
 
-        .final-reveal p {
-            font-size: 1.3rem;
-            line-height: 1.6;
-            color: #2e241f;
-        }
+    .option,
+    .alpha {
+      width: 100%;
+      border: 1px solid rgba(95, 61, 43, 0.12);
+      background: rgba(255,255,255,0.8);
+      color: var(--text);
+      border-radius: 18px;
+      padding: 16px 14px;
+      font-size: 0.98rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+      box-shadow: 0 8px 22px rgba(80, 56, 39, 0.06);
+    }
 
-        .ticket-link {
-            display: inline-block;
-            margin-top: 2rem;
-            background: #8b6c4d;
-            color: white;
-            font-weight: 700;
-            padding: 1.3rem 3rem;
-            border-radius: 60px;
-            text-decoration: none;
-            font-size: 1.5rem;
-            letter-spacing: -0.5px;
-            box-shadow: 0 20px 30px -10px #8b6c4d80;
-            transition: all 0.2s;
-            border: 2px solid #f0dbc0;
-        }
+    .alpha { padding: 14px 0; }
 
-        .ticket-link:hover {
-            background: #6b4f38;
-            transform: scale(1.03);
-        }
+    .option:hover,
+    .alpha:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 30px rgba(80, 56, 39, 0.10);
+      border-color: rgba(179, 106, 60, 0.35);
+    }
 
-        .hidden {
-            display: none !important;
-        }
+    .feedback {
+      margin-top: 18px;
+      min-height: 64px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.65);
+      border: 1px dashed rgba(95, 61, 43, 0.14);
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      line-height: 1.55;
+    }
 
-        .feedback-area {
-            min-height: 3rem;
-        }
+    .feedback.success {
+      background: var(--success-soft);
+      border-style: solid;
+      border-color: rgba(47, 143, 91, 0.18);
+      color: #226645;
+    }
 
-        hr {
-            border: none;
-            border-top: 2px dotted #dccbbc;
-            margin: 1.8rem 0 1rem;
-        }
-    </style>
+    .footer-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-top: 24px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      appearance: none;
+      border: none;
+      border-radius: 16px;
+      padding: 14px 18px;
+      font-weight: 800;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+    }
+
+    .btn-primary {
+      color: white;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 0 14px 30px rgba(179, 106, 60, 0.28);
+    }
+
+    .btn-secondary {
+      color: var(--text);
+      background: rgba(255,255,255,0.8);
+      border: 1px solid rgba(95, 61, 43, 0.1);
+    }
+
+    .btn:hover { transform: translateY(-1px); }
+    .btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+    .progress-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    .progress {
+      flex: 1;
+      height: 12px;
+      background: rgba(95, 61, 43, 0.08);
+      border-radius: 999px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      transition: width 0.45s ease;
+    }
+
+    .progress-label {
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .side-card {
+      width: 100%;
+      max-width: 320px;
+      min-height: 420px;
+      background: var(--card-strong);
+      border: 1px solid rgba(95, 61, 43, 0.12);
+      border-radius: 28px;
+      box-shadow: 0 18px 40px rgba(72, 49, 35, 0.10);
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .receipt-title {
+      font-size: 0.82rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .receipt-head {
+      font-size: 1.35rem;
+      margin: 0;
+    }
+
+    .receipt-sub {
+      margin: 8px 0 22px 0;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 0.95rem;
+    }
+
+    .mini-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .mini-item {
+      padding: 14px 14px;
+      border-radius: 18px;
+      background: rgba(179, 106, 60, 0.06);
+      border: 1px solid rgba(179, 106, 60, 0.10);
+    }
+
+    .mini-item strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 0.95rem;
+    }
+
+    .mini-item span {
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.45;
+    }
+
+    .celebration {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 30;
+    }
+
+    .confetti {
+      position: absolute;
+      top: -10vh;
+      width: 12px;
+      height: 20px;
+      opacity: 0.95;
+      border-radius: 3px;
+      animation: fall 2.6s linear forwards;
+    }
+
+    .mountains {
+      position: absolute;
+      inset: auto 0 0 0;
+      height: 230px;
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+      pointer-events: none;
+    }
+
+    .mountains.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .mountains svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .final-stage {
+      min-height: 640px;
+      display: none;
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at top, rgba(255,255,255,0.45), transparent 30%),
+        linear-gradient(180deg, #cde2ee 0%, #dce9dd 30%, #b6d2b2 63%, #8fad82 100%);
+    }
+
+    .final-stage.show {
+      display: block;
+      animation: fadeUp 0.7s ease;
+    }
+
+    .final-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(13, 32, 43, 0.12), rgba(13, 32, 43, 0.34));
+    }
+
+    .final-content {
+      position: relative;
+      z-index: 2;
+      padding: 56px 32px 42px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      min-height: 640px;
+    }
+
+    .final-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,255,255,0.16);
+      border: 1px solid rgba(255,255,255,0.26);
+      color: white;
+      padding: 10px 16px;
+      border-radius: 999px;
+      backdrop-filter: blur(8px);
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .final-title {
+      color: white;
+      margin: 22px 0 16px 0;
+      font-size: clamp(2.2rem, 4vw, 4.4rem);
+      line-height: 1.02;
+      letter-spacing: -0.05em;
+      max-width: 860px;
+      text-wrap: balance;
+    }
+
+    .final-text {
+      max-width: 760px;
+      color: rgba(255,255,255,0.95);
+      font-size: 1.15rem;
+      line-height: 1.9;
+      margin: 0;
+      text-wrap: pretty;
+    }
+
+    .final-actions {
+      margin-top: 34px;
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .download-btn {
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: #203126;
+      background: #fff6df;
+      padding: 16px 22px;
+      border-radius: 18px;
+      font-weight: 900;
+      box-shadow: 0 14px 28px rgba(29, 50, 36, 0.20);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .download-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 34px rgba(29, 50, 36, 0.24);
+    }
+
+    .ghost-btn {
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: white;
+      background: rgba(255,255,255,0.14);
+      border: 1px solid rgba(255,255,255,0.24);
+      padding: 16px 22px;
+      border-radius: 18px;
+      font-weight: 800;
+      backdrop-filter: blur(8px);
+    }
+
+    .hero-mountains,
+    .hero-clouds,
+    .hero-stars {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .hero-clouds div,
+    .hero-stars div,
+    .sparkles div {
+      position: absolute;
+      border-radius: 999px;
+    }
+
+    .hero-clouds div {
+      background: rgba(255,255,255,0.44);
+      filter: blur(1px);
+      animation: drift 18s linear infinite;
+    }
+
+    .hero-stars div {
+      width: 5px;
+      height: 5px;
+      background: rgba(255,255,255,0.8);
+      box-shadow: 0 0 18px rgba(255,255,255,0.65);
+      animation: twinkle 2.4s ease-in-out infinite;
+    }
+
+    .sparkles {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .sparkles div {
+      width: 7px;
+      height: 7px;
+      background: rgba(255, 243, 176, 0.95);
+      box-shadow: 0 0 18px rgba(255, 243, 176, 0.95);
+      animation: sparkle 3s ease-in-out infinite;
+    }
+
+    .travel-card {
+      margin-top: 30px;
+      width: min(720px, 100%);
+      background: rgba(255,255,255,0.14);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 28px;
+      backdrop-filter: blur(10px);
+      padding: 22px;
+      color: white;
+      text-align: left;
+      box-shadow: 0 20px 38px rgba(18, 40, 27, 0.18);
+    }
+
+    .travel-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .travel-item {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.16);
+      border-radius: 20px;
+      padding: 16px;
+    }
+
+    .travel-item .label {
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      opacity: 0.82;
+      margin-bottom: 6px;
+    }
+
+    .travel-item .value {
+      font-size: 1.05rem;
+      font-weight: 800;
+      line-height: 1.4;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fall {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(115vh) rotate(760deg); opacity: 0.98; }
+    }
+
+    @keyframes drift {
+      0% { transform: translateX(-8vw); }
+      100% { transform: translateX(115vw); }
+    }
+
+    @keyframes twinkle {
+      0%, 100% { transform: scale(0.65); opacity: 0.55; }
+      50% { transform: scale(1.1); opacity: 1; }
+    }
+
+    @keyframes sparkle {
+      0%, 100% { transform: translateY(0) scale(0.7); opacity: 0.35; }
+      50% { transform: translateY(-7px) scale(1.15); opacity: 1; }
+    }
+
+    @media (max-width: 900px) {
+      .content { grid-template-columns: 1fr; }
+      .right { border-left: none; border-top: 1px solid var(--border); min-height: 240px; }
+      .side-card { min-height: auto; max-width: 100%; }
+      .alpha-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+      .travel-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      body { padding: 14px; }
+      .left, .right { padding: 18px; }
+      .top-bar { padding: 18px 18px 0 18px; }
+      .alpha-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .options-grid { grid-template-columns: 1fr; }
+      .final-content { padding: 34px 18px 28px; }
+      .final-text { font-size: 1rem; line-height: 1.75; }
+      .travel-card { padding: 18px; }
+    }
+  </style>
 </head>
 <body>
-    <div class="discount-card" id="discountCard">
-        <h1>🍹 Don Diego <span>descuento especial</span></h1>
-        <div class="subhead">Preencha e ganhe 50% na sua bebida</div>
+  <div class="celebration" id="celebration"></div>
 
-        <!-- step containers -->
-        <div id="step1" class="question-container">
-            <div class="step-title">1. ✦ Cual es la letra inicial de su nombre?</div>
-            <div class="letter-grid" id="letterGrid"></div>
-            <div class="feedback-area" id="feedback1"></div>
+  <div class="shell">
+    <section class="card" id="quizCard">
+      <div class="top-bar">
+        <div class="brand">
+          <div class="brand-badge">🍹</div>
+          <div>
+            <h1>Formulario de Descuento de Bebida</h1>
+            <p>Casa saborosa • promo del día • respuesta rapidita</p>
+          </div>
         </div>
+        <div class="discount-pill">Hasta 17% de descuento bebida</div>
+      </div>
 
-        <div id="step2" class="question-container hidden">
-            <div class="step-title">2. 🍺 Hoje quer desconto em cual bebida?</div>
-            <div class="options-grid">
-                <button class="option-btn" data-beverage="beer">Cerveja</button>
-                <button class="option-btn" data-beverage="sparkling">Água com gás</button>
+      <div class="content">
+        <div class="left">
+          <div class="panel">
+            <div class="progress-wrap">
+              <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+              <div class="progress-label" id="progressLabel">Paso 1 de 8</div>
             </div>
-            <div class="feedback-area" id="feedback2"></div>
-        </div>
 
-        <div id="step3" class="question-container hidden">
-            <div class="message-banner">⚡ Casi lá! Você está casi obtendo seu desconto... ⚡</div>
-            <button class="continue-btn" id="continue3">Continuar</button>
-        </div>
+            <div class="eyebrow" id="eyebrow">Validación de cliente preferencial</div>
+            <h2 class="step-title" id="questionTitle">What is the initial letter of your name?</h2>
+            <p class="step-desc" id="questionDesc">Para liberar tu descuentito en la bebida, necesitamos unas respuestas súper técnicas y totalmente normales, claro.</p>
 
-        <div id="step4" class="question-container hidden">
-            <div class="step-title">3. 📺 Qual série você preferiria ver con su parceiro?</div>
-            <div class="options-grid">
-                <button class="option-btn" data-show="brooklyn">Brooklyn Nine Nine</button>
-                <button class="option-btn" data-show="emily">Emily in Paris</button>
+            <div id="questionArea"></div>
+
+            <div class="feedback" id="feedbackBox">Seleccione una opción para continuar con la auditoría importantíssima del restaurante.</div>
+
+            <div class="footer-actions">
+              <button class="btn btn-secondary" id="backBtn" disabled>Volver</button>
+              <button class="btn btn-primary" id="nextBtn" disabled>Siguiente</button>
             </div>
-            <div class="feedback-area" id="feedback4"></div>
+          </div>
         </div>
 
-        <div id="step5" class="question-container hidden">
-            <div class="step-title">4. ✈️ Onde você preferiria visitar em uma viagem surpresa?</div>
-            <div class="options-grid">
-                <button class="option-btn" data-place="la">Los Angeles, EUA</button>
-                <button class="option-btn" data-place="mp">Machu Picchu</button>
+        <aside class="right">
+          <div class="side-card" id="sideCard">
+            <div class="receipt-title">Resumen del cadastro</div>
+            <h3 class="receipt-head">Cliente con potencial de descuento</h3>
+            <p class="receipt-sub">Complete las perguntas y descubra si usted es una persona extremamente apta a recibir beneficios aleatorios.</p>
+
+            <div class="mini-list" id="summaryList">
+              <div class="mini-item">
+                <strong>Estado del processo</strong>
+                <span>Esperando respostas del formulário.</span>
+              </div>
+              <div class="mini-item">
+                <strong>Tipo de promo</strong>
+                <span>Bebida fria y felicidad moderada.</span>
+              </div>
+              <div class="mini-item">
+                <strong>Nível de precisión</strong>
+                <span>Muy científico, un poco sospechoso, pero elegante.</span>
+              </div>
             </div>
-            <div class="feedback-area" id="feedback5"></div>
-            <div id="mountainShow" class="hidden mountains-decoration">🏔️🏔️🏔️</div>
-        </div>
 
-        <div id="step6" class="question-container hidden">
-            <div class="message-banner">🌟 Incrível! Usted está respondendo tudo cierto! Só mais uma pergunta: 🌟</div>
-            <button class="continue-btn" id="continue6">Continuar</button>
-        </div>
-
-        <div id="step7" class="question-container hidden">
-            <div class="step-title">5. 💞 Como seu parceiro te definiria?</div>
-            <div class="options-grid">
-                <button class="option-btn" data-def="linda">linda e maravilhosa</button>
-                <button class="option-btn" data-def="trabalho">só me dá trabalho</button>
+            <div class="mountains" id="mountains">
+              <svg viewBox="0 0 500 230" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="500" height="230" fill="transparent"/>
+                <path d="M0 182L70 126L114 155L190 77L250 138L308 104L378 149L430 111L500 182V230H0V182Z" fill="#4B6E54"/>
+                <path d="M0 192L64 148L132 186L214 101L250 130L320 82L390 171L452 134L500 178V230H0V192Z" fill="#6B8F63"/>
+                <path d="M172 103L190 77L209 104H172Z" fill="#F4F3EE"/>
+                <path d="M303 105L321 82L338 104H303Z" fill="#F4F3EE"/>
+                <path d="M418 126L430 111L443 126H418Z" fill="#F4F3EE"/>
+                <path d="M0 201C66 190 126 196 180 205C232 214 302 215 361 203C410 194 453 192 500 198V230H0V201Z" fill="#91B086"/>
+              </svg>
             </div>
-            <div class="feedback-area" id="feedback7"></div>
-        </div>
+          </div>
+        </aside>
+      </div>
+    </section>
 
-        <div id="step8" class="question-container hidden">
-            <div class="final-reveal">
-                <h2>🪄 FAÇA AS MALAS! 🪄</h2>
-                <p>🌄 Você vai para <strong>Machu Picchu</strong>!<br>
-                Seu <em>namorado mais que enamorado</em> comprou passagens!<br>
-                💖 Ele te ama muito e preparou esta surpresa! 💖</p>
-                <div class="mountains-decoration">⛰️✨🏞️✨⛰️</div>
-                <a href="passagens.pdf" class="ticket-link" target="_blank">📥 BAIXE OS TICKETS AQUI 📥</a>
-                <p style="margin-top: 2rem; font-size: 1rem;">(passagens.pdf no repositório)</p>
+    <section class="final-stage" id="finalStage">
+      <div class="final-overlay"></div>
+
+      <div class="hero-clouds">
+        <div style="width:140px;height:42px;left:8%;top:16%;animation-delay:0s"></div>
+        <div style="width:190px;height:52px;left:26%;top:10%;animation-delay:-7s"></div>
+        <div style="width:130px;height:38px;left:58%;top:18%;animation-delay:-11s"></div>
+        <div style="width:220px;height:56px;left:78%;top:12%;animation-delay:-15s"></div>
+      </div>
+
+      <div class="hero-stars">
+        <div style="left:12%;top:14%;animation-delay:0s"></div>
+        <div style="left:22%;top:9%;animation-delay:.6s"></div>
+        <div style="left:37%;top:17%;animation-delay:1.2s"></div>
+        <div style="left:54%;top:12%;animation-delay:1.8s"></div>
+        <div style="left:69%;top:15%;animation-delay:.9s"></div>
+        <div style="left:84%;top:10%;animation-delay:1.5s"></div>
+      </div>
+
+      <div class="sparkles">
+        <div style="left:16%;top:28%;animation-delay:.2s"></div>
+        <div style="left:30%;top:25%;animation-delay:1.4s"></div>
+        <div style="left:46%;top:32%;animation-delay:.9s"></div>
+        <div style="left:64%;top:26%;animation-delay:2s"></div>
+        <div style="left:78%;top:30%;animation-delay:1s"></div>
+      </div>
+
+      <div class="final-content">
+        <div class="final-kicker">✈️ Anuncio oficial del namorado enamorado</div>
+        <h2 class="final-title">¡Haz tu malitas, Jessica!<br>¡Tú vas para Machu Picchu!</h2>
+        <p class="final-text">
+          Tú contestaste todo tan bien, tan correctamente, tan sospechosamente perfecta,
+          que ahora necesitamos anunciar la promo verdadera: <strong>tu namorado enamorado comprou passagens</strong>
+          para una aventura lindíssima contigo. Sí, mi amorcito: no era solo descuento de bebida.
+          Era un caminhito secreto hasta una surpresa gigante, con montañas, viaje, paisajes absurdamente bonitos
+          y nosotros dos viviendo una memoria hermosa en <strong>Machu Picchu</strong>. Ele te ama muchíssimo y preparó esta surpresa con todo cariño del mundo.
+        </p>
+
+        <div class="travel-card">
+          <strong style="font-size:1.1rem; letter-spacing:0.01em;">Destino desbloqueado: Machu Picchu, Perú</strong>
+          <div class="travel-grid">
+            <div class="travel-item">
+              <div class="label">Status</div>
+              <div class="value">Surpresa confirmadíssima</div>
             </div>
+            <div class="travel-item">
+              <div class="label">Compañía</div>
+              <div class="value">Namorado enamorado + Jessica</div>
+            </div>
+            <div class="travel-item">
+              <div class="label">Misión</div>
+              <div class="value">Viajar, mirar montañas y ser muy felices</div>
+            </div>
+          </div>
         </div>
 
-        <hr>
-        <p style="color:#9b8a7a; font-size:0.85rem; text-align:center;">Don Diego • promoción relámpago • portunhol auténtico</p>
-    </div>
+        <div class="final-actions">
+          <a class="download-btn" href="./passagens.pdf" download>
+            🎫 Baixe los tickets aqui
+          </a>
+          <a class="ghost-btn" href="#" id="replayBtn">🔁 Responder otra vez</a>
+        </div>
+      </div>
 
-    <script>
-        (function() {
-            // state
-            let currentStep = 1;  // 1 a 8
-            const stepElements = {
-                1: document.getElementById('step1'),
-                2: document.getElementById('step2'),
-                3: document.getElementById('step3'),
-                4: document.getElementById('step4'),
-                5: document.getElementById('step5'),
-                6: document.getElementById('step6'),
-                7: document.getElementById('step7'),
-                8: document.getElementById('step8')
-            };
+      <svg viewBox="0 0 1440 820" class="hero-mountains" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0 646L115 574L231 634L356 485L439 551L592 348L719 542L843 425L960 560L1085 398L1180 482L1290 410L1440 566V820H0V646Z" fill="#446B55"/>
+        <path d="M0 680L103 615L196 657L301 573L434 403L557 584L684 469L777 551L919 365L1034 541L1145 437L1258 529L1440 460V820H0V680Z" fill="#5D8667"/>
+        <path d="M560 392L592 348L624 391H560Z" fill="#F3F5F1"/>
+        <path d="M888 408L919 365L950 407H888Z" fill="#F3F5F1"/>
+        <path d="M1049 458L1085 398L1120 458H1049Z" fill="#F3F5F1"/>
+        <path d="M0 739C119 707 279 697 417 723C593 757 711 767 894 734C1077 700 1242 675 1440 718V820H0V739Z" fill="#83A27D"/>
+      </svg>
+    </section>
+  </div>
 
-            // feedback areas
-            const feedback1 = document.getElementById('feedback1');
-            const feedback2 = document.getElementById('feedback2');
-            const feedback4 = document.getElementById('feedback4');
-            const feedback5 = document.getElementById('feedback5');
-            const feedback7 = document.getElementById('feedback7');
-            const mountainDiv = document.getElementById('mountainShow');
+  <script>
+    const state = {
+      step: 0,
+      answers: [],
+      currentSelection: null,
+      finished: false,
+    };
 
-            // utility to show only one step
-            function showStep(step) {
-                for (let i = 1; i <= 8; i++) {
-                    stepElements[i].classList.add('hidden');
-                }
-                stepElements[step].classList.remove('hidden');
-                currentStep = step;
-            }
+    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
-            // celebration: confetti + optional highlight
-            function celebrateCorrect(buttonElement, message = '¡Correcto!') {
-                // small confetti burst
-                confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 } });
-                if (buttonElement) {
-                    buttonElement.classList.add('correct-highlight');
-                    setTimeout(() => {
-                        buttonElement.classList.remove('correct-highlight');
-                    }, 800);
-                }
-                // also show feedback (but we handle per step)
-            }
+    const steps = [
+      {
+        eyebrow: 'Chequeo 1 • identificación básica',
+        title: 'What is the initial letter of your name?',
+        desc: 'Marque la primera letra. Es una pergunta totalmente casual y nada específica, claro.',
+        type: 'alpha',
+        correct: 'J',
+        success: '¡¡Correctíssimo!! La letra J tiene una energía premium de cliente VIP. Qué coincidencia rara, no?',
+        fail: 'Hmm... opción registrada. Pero científicamente hablando, hay una letra que quedó especialmente linda aquí.',
+      },
+      {
+        eyebrow: 'Chequeo 2 • preferencia de bebida',
+        title: 'Hoy tú quieres descuento en qué bebida?',
+        desc: 'El restaurante valora mucho tu criterio hidratativo.',
+        type: 'options',
+        options: ['Beer', 'Sparkling water'],
+        correct: 'Sparkling water',
+        success: 'Excelente elección. Água con burbujitas = elegancia máxima. El sistema está muy impresionado.',
+        fail: 'Opción válida, claro. Pero existe una respuesta con un nivel de refinamiento más chispeante.',
+      },
+      {
+        eyebrow: 'Chequeo 3 • casi lá',
+        title: 'Tú estás casi ganando tu descuento',
+        desc: 'Respira. El processo está andando muy bien y con una cantidad sospechosa de aciertos.',
+        type: 'info',
+      },
+      {
+        eyebrow: 'Chequeo 4 • compatibilidad audiovisual',
+        title: 'What show do you prefer to watch with your partner?',
+        desc: 'Esto es importantíssimo para fines gastronómicos, por supuesto.',
+        type: 'options',
+        options: ['Brooklyn Nine-Nine', 'Emily in Paris'],
+        correct: 'Brooklyn Nine-Nine',
+        success: 'Perfección. Brooklyn Nine-Nine desbloquea pontos extras de buen gusto y pareja sincronizada.',
+        fail: 'Respuesta anotada. Pero hay una serie muy noice que el sistema ama especialmente.',
+      },
+      {
+        eyebrow: 'Chequeo 5 • destino hipotético y nada suspeito',
+        title: 'Where would you prefer to visit on a surprise trip?',
+        desc: 'Pregunta puramente teórica, sem nenhuma segunda intención... obvio.',
+        type: 'options',
+        options: ['Los Angeles, EUA', 'Machu Picchu'],
+        correct: 'Machu Picchu',
+        success: '¡¡Machu Picchu!! Ahora sí... esto fue absurdamente correcto. Mira esas montañas apareciendo así, de la nada.',
+        fail: 'Entendible. Pero hay un destino con vibes épicas de montañas ancestrales te esperando por aquí.',
+        showMountains: true,
+      },
+      {
+        eyebrow: 'Chequeo 6 • último ajuste',
+        title: 'Increíble! Tú estás contestando todo muy bien! Solo una preguntita más:',
+        desc: 'Estamos en la recta final del descuento más dramático de la historia del restaurante.',
+        type: 'info',
+      },
+      {
+        eyebrow: 'Chequeo 7 • evaluación extremamente precisa',
+        title: 'How would your partner define you?',
+        desc: 'Sea honesta. El sistema aprecia autoconhecimento y belleza factual.',
+        type: 'options',
+        options: ['Linda e maravilhosa', 'Só me dá trabajo'],
+        correct: 'Linda e maravilhosa',
+        success: 'Exacto. Finalmente una pergunta con respuesta 100% objetiva y sin espacio para discusión.',
+        fail: 'El sistema rechaza humildad excesiva. Favor seleccionar la definición correcta de tu magnificencia.',
+      },
+      {
+        eyebrow: 'Chequeo 8 • anuncio final',
+        title: 'Tú respondiste todo tan bien que necesitamos anunciar:',
+        desc: 'El restaurante ya no consigue esconder la información por más tiempo...',
+        type: 'reveal',
+      }
+    ];
 
-            // wrong answer feedback
-            function showWrong(stepId, msg) {
-                const feedMap = {
-                    1: feedback1,
-                    2: feedback2,
-                    4: feedback4,
-                    5: feedback5,
-                    7: feedback7
-                };
-                const fb = feedMap[stepId];
-                if (fb) {
-                    fb.innerHTML = `<div class="wrong-feedback">❌ ${msg}</div>`;
-                    setTimeout(() => {
-                        if (fb.innerHTML.includes(msg)) fb.innerHTML = '';
-                    }, 1500);
-                }
-            }
+    const questionTitle = document.getElementById('questionTitle');
+    const questionDesc = document.getElementById('questionDesc');
+    const questionArea = document.getElementById('questionArea');
+    const feedbackBox = document.getElementById('feedbackBox');
+    const progressBar = document.getElementById('progressBar');
+    const progressLabel = document.getElementById('progressLabel');
+    const eyebrow = document.getElementById('eyebrow');
+    const backBtn = document.getElementById('backBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const summaryList = document.getElementById('summaryList');
+    const mountains = document.getElementById('mountains');
+    const celebration = document.getElementById('celebration');
+    const quizCard = document.getElementById('quizCard');
+    const finalStage = document.getElementById('finalStage');
+    const replayBtn = document.getElementById('replayBtn');
 
-            // ----- STEP 1: letter J -----
-            const letterGrid = document.getElementById('letterGrid');
-            const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-            letters.forEach(l => {
-                const btn = document.createElement('button');
-                btn.className = 'option-btn';
-                btn.textContent = l;
-                btn.dataset.letter = l;
-                btn.addEventListener('click', (e) => {
-                    if (currentStep !== 1) return;
-                    if (l === 'J') {
-                        // correct!
-                        celebrateCorrect(btn);
-                        feedback1.innerHTML = ''; // clear any wrong
-                        // move to step2 after a tiny delay
-                        setTimeout(() => showStep(2), 600);
-                    } else {
-                        showWrong(1, `Não é a letra ${l}... tente de nuevo!`);
-                    }
-                });
-                letterGrid.appendChild(btn);
-            });
-
-            // ----- STEP 2: beverage = sparkling water (água com gás) -----
-            const step2Btns = document.querySelectorAll('#step2 .option-btn');
-            step2Btns.forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    if (currentStep !== 2) return;
-                    const beverage = btn.dataset.beverage;
-                    if (beverage === 'sparkling') {
-                        celebrateCorrect(btn);
-                        feedback2.innerHTML = '';
-                        setTimeout(() => showStep(3), 600);
-                    } else {
-                        showWrong(2, 'Hmm, tente de novo... a água com gás é mais leve!');
-                    }
-                });
-            });
-
-            // ----- STEP 3: continue button (message) -----
-            document.getElementById('continue3').addEventListener('click', () => {
-                if (currentStep === 3) showStep(4);
-            });
-
-            // ----- STEP 4: show Brooklyn Nine Nine -----
-            const step4Btns = document.querySelectorAll('#step4 .option-btn');
-            step4Btns.forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    if (currentStep !== 4) return;
-                    const show = btn.dataset.show;
-                    if (show === 'brooklyn') {
-                        celebrateCorrect(btn);
-                        feedback4.innerHTML = '';
-                        setTimeout(() => showStep(5), 600);
-                    } else {
-                        showWrong(4, 'Emily in Paris? Hmm, tenta a outra opção!');
-                    }
-                });
-            });
-
-            // ----- STEP 5: Machu Picchu + mountains -----
-            const step5Btns = document.querySelectorAll('#step5 .option-btn');
-            step5Btns.forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    if (currentStep !== 5) return;
-                    const place = btn.dataset.place;
-                    if (place === 'mp') {
-                        celebrateCorrect(btn);
-                        feedback5.innerHTML = '';
-                        mountainDiv.classList.remove('hidden'); // show mountains
-                        // extra confetti for mountains
-                        confetti({ particleCount: 120, spread: 100, origin: { y: 0.5 } });
-                        setTimeout(() => {
-                            showStep(6);
-                            mountainDiv.classList.add('hidden'); // hide for next step
-                        }, 1000);
-                    } else {
-                        showWrong(5, 'Los Angeles? Que tal um lugar mais mágico?');
-                    }
-                });
-            });
-
-            // ----- STEP 6: continue (incredible message) -----
-            document.getElementById('continue6').addEventListener('click', () => {
-                if (currentStep === 6) showStep(7);
-            });
-
-            // ----- STEP 7: "linda e maravilhosa" -----
-            const step7Btns = document.querySelectorAll('#step7 .option-btn');
-            step7Btns.forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    if (currentStep !== 7) return;
-                    const def = btn.dataset.def;
-                    if (def === 'linda') {
-                        celebrateCorrect(btn);
-                        feedback7.innerHTML = '';
-                        // grande finale!
-                        setTimeout(() => showStep(8), 700);
-                        // extra confetti rain
-                        confetti({ particleCount: 200, spread: 120, origin: { y: 0.5 } });
-                    } else {
-                        showWrong(7, 'Esa não... ela é linda e maravilhosa! ❤️');
-                    }
-                });
-            });
-
-            // start: step1 visible
-            showStep(1);
-
-            // disable double-click or multiple answers? we rely on step guard and disable not needed
-            // but we can add small thing: after correct, buttons still clickable but step changes, so it's fine
-
-            // also handle case where step2,4,5,7 might get multiple correct clicks? step changes quickly, but guard currentStep prevents
-            // optionally we can disable buttons after correct, but not necessary
-
-            // for extra portunhol ambiance, pre-set some feedbacks
-        })();
-    </script>
-
-    <!-- small extra style for mountain reveal -->
-    <style>
-        #mountainShow:not(.hidden) {
-            display: flex;
-            animation: float 1.5s infinite alternate;
+    function renderSummary() {
+      const items = [
+        {
+          title: 'Estado del processo',
+          text: state.finished
+            ? 'Anuncio liberado con éxito romântico.'
+            : `Paso ${Math.min(state.step + 1, 8)} en andamento.`
+        },
+        {
+          title: 'Acertitos especiales',
+          text: `${state.answers.filter(a => a && a.correct).length} respuesta(s) sospechosamente perfectas.`
+        },
+        {
+          title: 'Clima del sistema',
+          text: state.step < 4
+            ? 'Todavía parece un formulário normal. Más o menos.'
+            : 'El formulário está empezando a perder la compostura.'
         }
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            100% { transform: translateY(-8px); }
+      ];
+
+      summaryList.innerHTML = items.map(item => `
+        <div class="mini-item">
+          <strong>${item.title}</strong>
+          <span>${item.text}</span>
+        </div>
+      `).join('');
+    }
+
+    function triggerConfetti(amount = 26) {
+      const colors = ['#d9985f', '#b36a3c', '#2f8f5b', '#f1c27d', '#f7e4a4', '#ffffff'];
+      for (let i = 0; i < amount; i++) {
+        const piece = document.createElement('div');
+        piece.className = 'confetti';
+        piece.style.left = Math.random() * 100 + 'vw';
+        piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+        piece.style.animationDelay = (Math.random() * 0.18) + 's';
+        piece.style.transform = `translateY(0) rotate(${Math.random() * 180}deg)`;
+        celebration.appendChild(piece);
+        setTimeout(() => piece.remove(), 3000);
+      }
+    }
+
+    function setFeedback(message, success = false) {
+      feedbackBox.textContent = message;
+      feedbackBox.className = success ? 'feedback success' : 'feedback';
+    }
+
+    function setSelection(value, correct) {
+      state.currentSelection = { value, correct };
+      nextBtn.disabled = false;
+      setFeedback(correct ? steps[state.step].success : steps[state.step].fail, correct);
+      if (correct) triggerConfetti(20);
+      if (steps[state.step].showMountains && value === 'Machu Picchu') {
+        mountains.classList.add('show');
+      }
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      const step = steps[state.step];
+      const answered = state.answers[state.step];
+      const activeSelection = state.currentSelection || answered || null;
+
+      eyebrow.textContent = step.eyebrow;
+      questionTitle.textContent = step.title;
+      questionDesc.textContent = step.desc;
+      progressBar.style.width = `${((state.step + 1) / steps.length) * 100}%`;
+      progressLabel.textContent = `Paso ${state.step + 1} de ${steps.length}`;
+      backBtn.disabled = state.step === 0;
+
+      if (step.type === 'alpha') {
+        questionArea.innerHTML = `
+          <div class="alpha-grid">
+            ${alphabet.map(letter => `
+              <button class="alpha" data-value="${letter}">${letter}</button>
+            `).join('')}
+          </div>
+        `;
+      } else if (step.type === 'options') {
+        questionArea.innerHTML = `
+          <div class="options-grid">
+            ${step.options.map(option => `
+              <button class="option" data-value="${option}">${option}</button>
+            `).join('')}
+          </div>
+        `;
+      } else if (step.type === 'info') {
+        questionArea.innerHTML = `
+          <div class="options-grid" style="grid-template-columns:1fr;">
+            <button class="option" data-value="continuar">Entendido, seguir proceso</button>
+          </div>
+        `;
+      } else if (step.type === 'reveal') {
+        questionArea.innerHTML = `
+          <div class="options-grid" style="grid-template-columns:1fr;">
+            <button class="option" data-value="revelar">Ok... anunciar ahora</button>
+          </div>
+        `;
+      }
+
+      const buttons = questionArea.querySelectorAll('button');
+      buttons.forEach(btn => {
+        const value = btn.dataset.value;
+        const isCorrect = step.correct ? value === step.correct : true;
+
+        if (activeSelection && activeSelection.value === value) {
+          btn.style.borderColor = activeSelection.correct ? 'rgba(47, 143, 91, 0.45)' : 'rgba(179, 106, 60, 0.42)';
+          btn.style.background = activeSelection.correct ? 'rgba(223, 246, 234, 0.95)' : 'rgba(255, 246, 232, 0.95)';
         }
-        .final-reveal p {
-            margin: 1rem 0;
-        }
-        .final-reveal em {
-            font-style: italic;
-            background: #fdebd0;
-            padding: 0.2rem 0.6rem;
-            border-radius: 30px;
-        }
-    </style>
+
+        btn.addEventListener('click', () => {
+          if (step.type === 'info') {
+            state.currentSelection = { value, correct: true };
+            nextBtn.disabled = false;
+            setFeedback('Perfecto. El processo sigue avanzando con un nivel de mistério cada vez menos discreto.', true);
+            triggerConfetti(14);
+            renderQuestion();
+            return;
+          }
+
+          if (step.type === 'reveal') {
+            state.currentSelection = { value, correct: true };
+            nextBtn.disabled = false;
+            setFeedback('Ya no da para esconder. Prepárate para el anuncio oficial.', true);
+            triggerConfetti(24);
+            renderQuestion();
+            return;
+          }
+
+          setSelection(value, isCorrect);
+        });
+      });
+
+      if (answered && !state.currentSelection) {
+        setFeedback(answered.correct ? (step.success || 'Respuesta registrada con éxito.') : (step.fail || 'Respuesta registrada.'), answered.correct);
+        nextBtn.disabled = false;
+      } else if (!activeSelection) {
+        nextBtn.disabled = true;
+        const defaultMessages = {
+          alpha: 'Seleccione una letra para continuar con la validación delicadíssima.',
+          options: 'Seleccione una opción para continuar con la auditoría importantíssima del restaurante.',
+          info: 'Confirme para seguir al próximo passo.',
+          reveal: 'Cuando estés lista, haz clic para liberar el anuncio.'
+        };
+        setFeedback(defaultMessages[step.type] || 'Seleccione una opción.');
+      }
+
+      renderSummary();
+    }
+
+    backBtn.addEventListener('click', () => {
+      if (state.step === 0) return;
+      state.step -= 1;
+      state.currentSelection = state.answers[state.step] || null;
+      renderQuestion();
+    });
+
+    nextBtn.addEventListener('click', () => {
+      const step = steps[state.step];
+      if (!state.currentSelection && step.type !== 'info' && step.type !== 'reveal') return;
+
+      state.answers[state.step] = state.currentSelection || { value: 'continuar', correct: true };
+      state.currentSelection = null;
+
+      if (state.step === steps.length - 1) {
+        revealFinal();
+        return;
+      }
+
+      state.step += 1;
+      renderQuestion();
+    });
+
+    function revealFinal() {
+      state.finished = true;
+      quizCard.style.display = 'none';
+      finalStage.classList.add('show');
+      triggerConfetti(80);
+      setTimeout(() => triggerConfetti(60), 500);
+    }
+
+    replayBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      state.step = 0;
+      state.answers = [];
+      state.currentSelection = null;
+      state.finished = false;
+      mountains.classList.remove('show');
+      finalStage.classList.remove('show');
+      quizCard.style.display = 'block';
+      renderQuestion();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    renderQuestion();
+  </script>
 </body>
 </html>
-
-
-
