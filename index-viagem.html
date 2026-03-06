@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário de Descuento</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .shake {
+            animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+        }
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+    </style>
+</head>
+<body id="main-body" class="bg-gray-100 min-h-screen flex items-center justify-center p-4 transition-colors duration-1000 font-sans text-gray-800">
+
+    <div id="app-container" class="bg-white p-8 rounded border border-gray-300 shadow-sm w-full max-w-lg text-center transition-all duration-1000 relative overflow-hidden">
+        <!-- O conteúdo será injetado aqui via JavaScript -->
+    </div>
+
+    <script>
+        const appContainer = document.getElementById('app-container');
+        const mainBody = document.getElementById('main-body');
+        let currentStep = 0;
+
+        const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+
+        function renderError(msg) {
+            const errorDiv = document.getElementById('error-msg');
+            errorDiv.textContent = msg;
+            errorDiv.classList.remove('opacity-0');
+            appContainer.classList.remove('shake');
+            void appContainer.offsetWidth; // trigger reflow
+            appContainer.classList.add('shake');
+            setTimeout(() => {
+                errorDiv.classList.add('opacity-0');
+            }, 2000);
+        }
+
+        function celebrate() {
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+        }
+
+        function nextStep(step) {
+            currentStep = step;
+            render();
+        }
+
+        function render() {
+            let html = '';
+
+            switch(currentStep) {
+                case 0:
+                    html = `
+                        <div class="fade-in">
+                            <h1 class="text-xl font-bold mb-4">Restaurante - Formulário de Descuento</h1>
+                            <p class="mb-6 text-gray-600">Complete el formulário para obter un descuento en su cuenta de hoy.</p>
+                            <button onclick="nextStep(1)" class="bg-gray-800 text-white px-6 py-2 rounded hover:bg-gray-700 transition w-full">Empezar Formulário</button>
+                        </div>
+                    `;
+                    break;
+
+                case 1:
+                    let lettersHtml = alphabet.map(letter => {
+                        const isJ = letter === 'J';
+                        return `<button onclick="${isJ ? 'celebrate(); setTimeout(() => nextStep(2), 1500)' : 'renderError(\'Esta letra no tiene descuento hoy.\')'}" 
+                                class="border border-gray-300 rounded p-2 hover:bg-gray-100 transition text-lg font-medium">
+                                ${letter}
+                                </button>`;
+                    }).join('');
+
+                    html = `
+                        <div class="fade-in">
+                            <h2 class="text-lg font-bold mb-4">Pregunta 1</h2>
+                            <p class="mb-4">¿Cual es la letra inicial de su nombre?</p>
+                            <div class="grid grid-cols-6 gap-2 mb-4">
+                                ${lettersHtml}
+                            </div>
+                            <p id="error-msg" class="text-red-500 text-sm opacity-0 transition-opacity">Erro</p>
+                        </div>
+                    `;
+                    break;
+
+                case 2:
+                    html = `
+                        <div class="fade-in">
+                            <h2 class="text-lg font-bold mb-4">Pregunta 2</h2>
+                            <p class="mb-4">¿Hoy usted quiere descuento en cual bebida?</p>
+                            <div class="flex flex-col gap-3">
+                                <button onclick="renderError('Opción sin stock para descuento.')" class="border border-gray-300 p-3 rounded hover:bg-gray-100 transition">Cerveza</button>
+                                <button onclick="celebrate(); setTimeout(() => nextStep(3), 1500)" class="border border-gray-300 p-3 rounded hover:bg-gray-100 transition">Agua con gas</button>
+                            </div>
+                            <p id="error-msg" class="text-red-500 text-sm opacity-0 transition-opacity mt-4">Erro</p>
+                        </div>
+                    `;
+                    break;
+
+                case 3:
+                    html = `
+                        <div class="fade-in">
+                            <h2 class="text-xl font-bold mb-4 text-green-700">¡Aviso!</h2>
+                            <p class="mb-6">Usted está casi obteniendo su descuento.</p>
+                            <button onclick="nextStep(4)" class="bg-gray-800 text-white px-6 py-2 rounded hover:bg-gray-700 transition w-full">Continuar</button>
+                        </div>
+                    `;
+                    break;
+
+                case 4:
+                    html = `
+                        <div class="fade-in">
+                            <h2 class="text-lg font-bold mb-4">Pregunta 54</h2>
+                            <p class="mb-4">¿Cual show usted prefiere mirar con su pareja?</p>
+                            <div class="flex flex-col gap-3">
+                                <button onclick="celebrate(); setTimeout(() => nextStep(5), 1500)" class="border border-gray-300 p-3 rounded hover:bg-gray-100 transition">Brooklyn Nine Nine</button>
+                                <button onclick="renderError('Respuesta incorrecta para esta pareja.')" class="border border-gray-300 p-3 rounded hover:bg-gray-100 transition">Emily in Paris</button>
+                            </div>
+                            <p id="error-msg" class="text-red-500 text-sm opacity-0 transition-opacity mt-4">Erro</p>
+                        </div>
+                    `;
+                    break;
+
+                case 5:
+                    html = `
+                        <div class="fade-in">
+                            <h2 class="text-lg font-bold mb-4">Pregunta 5</h2>
+                            <p class="mb-4">¿Donde usted prefiere visitar en un viaje sorpresa?</p>
+                            <div class="flex flex-col gap-3">
+                                <button onclick="renderError('Destino no disponible en el sistema.')" class="border border-gray-300 p-3 rounded hover:bg-gray-100 transition">Los Angeles, EUA</button>
+                                <button onclick="celebrate(); document.getElementById('mountains').classList.remove('hidden'); setTimeout(() => nextStep(6), 2500)" class="border border-gray-300 p-3 rounded hover:bg-gray-100 transition relative overflow-hidden group">
+                                    Machu Picchu
+                                    <div id="mountains" class="hidden absolute inset-0 flex items-center justify-center bg-green-100 text-3xl">
+                                        ⛰️⛰️⛰️⛰️⛰️
+                                    </div>
+                                </button>
+                            </div>
+                            <p id="error-msg" class="text-red-500 text-sm opacity-0 transition-opacity mt-4">Erro</p>
+                        </div>
+                    `;
+                    break;
+
+                case 6:
+                    html = `
+                        <div class="fade-in">
+                            <p class="mb-6 text-lg">Usted está respondiendo todo bien. Solo una pregunta más:</p>
+                            <button onclick="nextStep(7)" class="bg-gray-800 text-white px-6 py-2 rounded hover:bg-gray-700 transition w-full">Ver Última Pregunta</button>
+                        </div>
+                    `;
+                    break;
+
+                case 7:
+                    html = `
+                        <div class="fade-in">
+                            <h2 class="text-lg font-bold mb-4">Pregunta 7</h2>
+                            <p class="mb-4">¿Como su pareja define a usted?</p>
+                            <div class="flex flex-col gap-3">
+                                <button onclick="nextStep(8)" class="border border-gray-300 p-3 rounded hover:bg-gray-100 transition">linda e maravilhosa</button>
+                                <button onclick="renderError('Respuesta no permitida.')" class="border border-gray-300 p-3 rounded hover:bg-gray-100 transition">só me dá trabalho</button>
+                            </div>
+                            <p id="error-msg" class="text-red-500 text-sm opacity-0 transition-opacity mt-4">Erro</p>
+                        </div>
+                    `;
+                    break;
+
+                case 8:
+                    html = `
+                        <div class="fade-in">
+                            <p class="mb-6 text-lg">Usted respondió todo tan bien que necesitamos anunciar:</p>
+                            <button onclick="nextStep(9)" class="bg-gray-800 text-white px-6 py-2 rounded hover:bg-gray-700 transition w-full">Ver Anuncio</button>
+                        </div>
+                    `;
+                    break;
+
+                case 9:
+                    // Change theme to match Machu Picchu / Travel vibe
+                    mainBody.classList.remove('bg-gray-100', 'text-gray-800');
+                    mainBody.classList.add('bg-emerald-900', 'text-white');
+                    appContainer.classList.remove('bg-white', 'border-gray-300');
+                    appContainer.classList.add('bg-emerald-800', 'border-emerald-700', 'text-white');
+                    
+                    celebrate();
+                    let endInterval = setInterval(celebrate, 2000);
+                    setTimeout(() => clearInterval(endInterval), 6000);
+
+                    html = `
+                        <div class="fade-in py-8">
+                            <div class="text-5xl mb-6">⛰️🦙✈️</div>
+                            <h1 class="text-3xl font-bold mb-4">¡Make your bagages, Jessica!</h1>
+                            <h2 class="text-2xl mb-6">You are going to Machu Picchu!</h2>
+                            <p class="mb-4 text-lg">Seu "namorado enamorado" comprou passagens!</p>
+                            <p class="mb-8 text-lg">Ele te ama muito e preparou esta surpresa!</p>
+                            
+                            <a href="passagens.pdf" download class="inline-block bg-white text-emerald-900 font-bold px-8 py-4 rounded-lg shadow-lg hover:bg-emerald-100 transition transform hover:scale-105">
+                                Baixe os tickets aqui 🎫
+                            </a>
+                        </div>
+                    `;
+                    break;
+            }
+
+            appContainer.innerHTML = html;
+        }
+
+        // Init
+        render();
+    </script>
+</body>
+</html>
